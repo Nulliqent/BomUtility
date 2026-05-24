@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # 1. Database Tier: Purely downloads the vulnerability database 
+  trivy-db-updater:
+    image: aquasec/trivy:latest
+    container_name: trivy_db_updater
+    entrypoint: /bin/sh
+    command: -c "while true; do trivy image --download-db-only --no-progress && trivy image --download-java-db-only --no-progress; sleep 86400; done"
+    volumes:
+      - trivy_cache:/root/.cache/trivy
+
+  # 2. Scanning Server Tier: Purely performs vulnerability analysis in memory.
+  trivy-server:
+    image: aquasec/trivy:latest
+    container_name: trivy_server
+    entrypoint: /bin/sh
+    command: -c "while [ ! -f /root/.cache/trivy/db/trivy.db ]; do echo 'Waiting for Trivy DB to be downloaded...'; sleep 5; done; trivy server --listen 0.0.0.0:4954 --skip-db-update"
+    ports:
+      - "4954:4954"
+    volumes:
+      - trivy_cache:/root/.cache/trivy
+    depends_on:
+      - trivy-db-updater
+    restart: unless-stopped
+
+  # 3. Web & Pipeline Tier: The Next.js Configurator UI
+  configurator:
+    build: .
+    container_name: security_configurator
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./reports:/app/reports
+    depends_on:
+      - trivy-server
+    restart: unless-stopped
+    environment:
+      # Use internal Docker networking to cleanly connect the web client to the scan server
+      - TRIVY_SERVER=http://trivy-server:4954
+
+volumes:
+  trivy_cache:

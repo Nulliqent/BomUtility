@@ -1,0 +1,26 @@
+{
+  "name": "ai-testproject",
+  "version": "1.0.0",
+  "description": "An automated, air-gapped security dependency pipeline that ingests CycloneDX SBOMs, sanitizes proprietary components, executes offline Trivy vulnerability scans, fetches End-of-Life (EOL) data, and compiles everything into a stunning, centralized HTML & Markdown dashboard.",
+  "main": "configurator.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.25",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^6.0.3"
+  }
+}

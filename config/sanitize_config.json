@@ -1,0 +1,9 @@
+{
+  "redact_texts": [
+    "github.com/Extinc"
+  ],
+  "filter_groups": [
+    "com.mycompany.internal",
+    "org.private.proprietary"
+  ]
+}

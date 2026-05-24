@@ -1,0 +1,99 @@
+{
+  "tracked_products": [
+    {
+      "slug": "log4j",
+      "version": "2.24.3",
+      "mappings": [
+        {
+          "group": "org.apache.logging.log4j",
+          "name": "log4j-api"
+        },
+        {
+          "group": "org.apache.logging.log4j",
+          "name": "log4j-to-slf4j"
+        }
+      ]
+    },
+    {
+      "slug": "postgresql",
+      "version": "18",
+      "mappings": []
+    },
+    {
+      "slug": "spring-boot",
+      "version": "3.4.5",
+      "mappings": [
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-actuator"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-autoconfigure"
+        },
+        {
+          "group": "spring-boot-jarmode-tools",
+          "name": "spring-boot-jarmode-tools"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-configuration-processor"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-data-jpa"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-jdbc"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-json"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-logging"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-test"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-tomcat"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter-web"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-starter"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-test-autoconfigure"
+        },
+        {
+          "group": "org.springframework.boot",
+          "name": "spring-boot-test"
+        }
+      ]
+    },
+    {
+      "slug": "spring-framework",
+      "version": "6.2.6",
+      "mappings": [
+        {
+          "group": "org.springframework",
+          "name": "spring-aop"
+        }
+      ]
+    }
+  ]
+}
