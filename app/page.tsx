@@ -15,7 +15,7 @@ type ProductState = {
 
 export default function Page() {
   const [allProducts, setAllProducts] = useState<string[]>([]);
-  const [detectedPackages, setDetectedPackages] = useState<string[]>([]);
+  const [detectedPackages, setDetectedPackages] = useState<any[]>([]);
   const [trackedState, setTrackedState] = useState<Record<string, ProductState>>({});
   
   const [currentFilter, setCurrentFilter] = useState<'all' | 'selected'>('all');
@@ -250,6 +250,68 @@ export default function Page() {
 
         <UploadStagingArea onUploadSuccess={(packages) => {
           setDetectedPackages(packages);
+          
+          setTrackedState(prev => {
+            const newState = { ...prev };
+            let hasUpdates = false;
+            
+            packages.forEach(pkg => {
+              let group = '';
+              let name = pkg.id;
+              const version = pkg.version || 'latest';
+              
+              if (pkg.id.includes(':')) {
+                const parts = pkg.id.split(':');
+                group = parts[0];
+                name = parts[1];
+              }
+              const groupName = (group + ':' + name).toLowerCase();
+              
+              const matchedSlugs = allProducts.filter((slug: string) => {
+                const slugLower = slug.toLowerCase();
+                if (name.toLowerCase() === slugLower) return true;
+                
+                const noDash = slugLower.replace(/-/g, '');
+                if (slugLower.length > 4) {
+                   if (groupName.includes(slugLower)) return true;
+                   if (groupName.includes(noDash)) return true;
+                } else {
+                   const regex = new RegExp(`\\b${slugLower}\\b`, 'i');
+                   if (regex.test(name)) return true;
+                }
+                return false;
+              });
+              
+              matchedSlugs.forEach((slug: string) => {
+                if (!newState[slug]) {
+                  newState[slug] = { checked: true, version: version, mappings: [], showMappings: false };
+                } else {
+                  newState[slug] = { ...newState[slug], mappings: [...newState[slug].mappings] };
+                  // If we previously had 'latest' and found a specific version, upgrade it
+                  if (newState[slug].version === 'latest' && version !== 'latest') {
+                    newState[slug].version = version;
+                  }
+                }
+                
+                newState[slug].checked = true;
+                
+                const mappingExists = newState[slug].mappings.some(
+                  (m: any) => m.name === name && m.group === group
+                );
+                
+                if (!mappingExists) {
+                  newState[slug].mappings.push({ group, name });
+                  hasUpdates = true;
+                }
+              });
+            });
+            
+            if (hasUpdates) {
+              setCurrentFilter('selected');
+            }
+            
+            return newState;
+          });
         }} />
 
         <div className="filter-panel">
@@ -287,9 +349,9 @@ export default function Page() {
 
       {mappingModalSlug && (
         <MappingModal 
-          slug={mappingModalSlug}
-          mappings={trackedState[mappingModalSlug].mappings}
-          detectedPackages={detectedPackages}
+          slug={mappingModalSlug} 
+          mappings={trackedState[mappingModalSlug]?.mappings || []}
+          detectedPackages={detectedPackages.map((p: any) => p.id)}
           onClose={() => setMappingModalSlug(null)}
           onAddMapping={handleAddMapping}
           onRemoveMapping={handleRemoveMapping}
